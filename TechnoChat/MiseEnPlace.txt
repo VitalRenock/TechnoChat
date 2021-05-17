@@ -1,0 +1,70 @@
+﻿1) Je crée un dossier 'Hubs'
+
+2) Je créer une Interface public 'IChatClient' dans le dossier 'Hubs'
+
+3) J'implémente les signatures de méthodes voulues. (Qui seront disponible sur 'Hub.Clients')
+
+4) Je créer une Interface public 'IChatServeur' dans le dossier 'Hubs'
+
+5) J'implémente les signatures de méthodes voulues. (Qui seront implémenté dans la future classe 'ChatHub')
+
+6) Je crée une classe 'ChatHub' qui hérite de la classe 'Hub<IChatClient>'(using Microsoft.AspNetCore.SignalR;) et implémente l'interface 'IChatServeur'
+	=> public class ChatHub : Hub<IChatClient>, IChatServeur
+
+7) Je code mes fonctions précédement implémenté. (Ma fonction représente le Client actuel et indique à QUI et QUOI communiquer).
+	ex:	public async Task SendMessage(string user, string message)
+		{
+			await Clients.All.ReceiveMessage($"{user}:{message}");
+		}
+
+8) Je configure mon fichier Startup.cs
+
+	8.1 Dans la méthode ConfigureServices:
+
+		- J'ajoute le service 'SignalR':
+			services.AddSignalR();
+
+		-J'ajoute Cors pour la gestion des Cross-domain (SignalR appelé par différents serveur)
+			services.AddCors(o =>
+				o.AddDefaultPolicy(b => 
+					b.AllowAnyOrigin()
+					.AllowAnyHeader()
+					.AllowAnyMethod()
+					)
+				);
+
+	8.2 Dans la méthode Configure:
+
+		- J'ajoute un 'endpoints' pour mon ChatHub avec SignalR.
+			app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<ChatHub>("/chatHub"); // Ajout du 'endpoints'
+            });
+
+		- J'indique à l'application d'utiliser Cors.
+			app.UseCors();
+9) J'installe la bibliothèque SignalR coté client:
+	Clique droit sur le dossier 'wwwroot', Ajouter - Bibliothèque coté-client
+
+10) Je modifie ma vue partiel '_Layout' pour implémenter SignalR dans toutes les pages.
+	<script src="~/lib/microsoft-signalr/signalr.js" type="text/javascript"></script>
+
+11) Dans une balise script j'utilise signalR
+	<script>
+        let connection = new signalR.HubConnectionBuilder()
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Trace)
+            .withUrl("/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", data => {
+            let h1Node = document.body.appendChild(document.createElement("h1"));
+            h1Node.innerText = data;
+        });
+
+        connection.start()
+            .then(() => connection.invoke("SendMessage", "VitalRenock", "Hello world"));
+    </script>

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using TechnoChat.Hubs;
 using TechnoChat.Infrastructure;
 using TII = TechnoChat.Infrastructure.Interfaces;
+//localhost: 44348
 
 namespace TechnoChat
 {
@@ -101,6 +102,9 @@ namespace TechnoChat
 
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapControllerRoute(
+					name: "api",
+					pattern: "api/{controller}");
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");

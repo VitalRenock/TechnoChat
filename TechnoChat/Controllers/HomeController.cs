@@ -18,6 +18,7 @@ namespace TechnoChat.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHubContext<ChatHub, IChatClient> _hubContext;
         private TII.IGroupManager _groupManager;
+
         public HomeController(ILogger<HomeController> logger, IHubContext<ChatHub, IChatClient> hubContext, TII.IGroupManager groupManager)
         {
             _hubContext = hubContext;

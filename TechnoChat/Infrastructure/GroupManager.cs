@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TechnoChat.Models;
 
-namespace TechnoChat.Hubs
+using TechnoChat.Models;
+using TII = TechnoChat.Infrastructure.Interfaces;
+
+namespace TechnoChat.Infrastructure
 {
-	public class GroupManager: Hub, IGroupManager
+	public class GroupManager: TII.IGroupManager
 	{
 		private readonly List<GroupModel> groups;
 
@@ -39,19 +41,30 @@ namespace TechnoChat.Hubs
 
 		public bool RemoveUserFromGroup(string user, string groupName)
 		{
-			GroupModel groupModel = groups.FirstOrDefault(c => c.Name == groupName);
-			if (groupModel != null)
+			try
 			{
-				groups.Remove(groupModel);
+				GroupModel gm = groups.FirstOrDefault(c => c.Name == groupName);
+				if (gm != null)
+				{
+					UserModel um = gm.Users.FirstOrDefault(u => u.Name == user);
+					if (um != null)
+					{
+						gm.Users.Remove(um);
+					}
+				}
 				return true;
 			}
-			else
+			catch (Exception)
+			{
+
 				return false;
+			}
+
 		}
 
-		public List<UserModel> ListUserOfGroup(GroupModel group)
+		public List<UserModel> ListUserOfGroup(string groupName)
 		{
-			return groups.FirstOrDefault(c => c.Name == group.Name)?.Users;
+			return groups.FirstOrDefault(c => c.Name == groupName)?.Users;
 		}
 
 		public List<GroupModel> ListOfGroup()

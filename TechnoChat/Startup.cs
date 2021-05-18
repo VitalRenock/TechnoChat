@@ -8,7 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using TechnoChat.Hubs;
+using TechnoChat.Infrastructure;
+using TII = TechnoChat.Infrastructure.Interfaces;
 
 namespace TechnoChat
 {
@@ -25,7 +28,7 @@ namespace TechnoChat
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Ajout du 'GroupManager' en Singleton
-			services.AddSingleton<IGroupManager, GroupManager>();
+			services.AddSingleton<TII.IGroupManager, GroupManager>();
 
 			services.AddSignalR();
 

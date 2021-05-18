@@ -1,8 +1,48 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Login Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@*Formulaire de connexion au Chat*@
+<form method="post" id="loginForm">
+        <input type="text" class="form-control" placeholder="Login" name="Login">
+        <input type="password" class="form-control" placeholder="Password" name="Password">
+        <button type="submit" class="btn btn-primary btn-block">Connexion</button>
+</form>
+
+
+@section Scripts
+{
+    <script>
+        let frm = document.getElementById("loginForm");
+        frm.addEventListener("submit", callLoginProcess, false);
+
+        function callLoginProcess(event) {
+            //Empêcher le post du formulaire
+            event.preventDefault();
+            let link = "https://localhost:44348/api/token/";
+            let login = frm[0].value;
+            let pwd = frm[1].value;
+            let data = {
+                "Login": login,
+                "Password": pwd
+            };
+            fetch(link,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json; charset=utf-8" },
+                    body: JSON.stringify(data)
+                }
+            )
+                .then(res => res.json())
+                .then(response => {
+                    // here you do what you want with response
+                    localStorage.setItem('token', response.token)
+                    document.location.href = "/Home/Chat"
+                })
+                .catch(err => {
+
+                    alert("sorry, authentication failed")
+                });
+        }
+    </script>
+}

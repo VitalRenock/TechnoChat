@@ -9,5 +9,6 @@ namespace TechnoChat.Models
 	{
 		public string Name { get; set; }
 		public string ConnectionID { get; set; }
+		public string Token { get; set; }
 	}
 }

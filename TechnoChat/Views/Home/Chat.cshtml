@@ -1,0 +1,74 @@
+﻿@*Je crée une section 'Scripts' à placer dans mes autres vues*@
+@section Scripts
+{
+    @*Je référence la bibliothèque SignalR*@
+    <script src="~/lib/microsoft-signalr/signalr.js" type="text/javascript"></script>
+
+    <script>
+
+        /*Création d'un nouveau protocole de communication Client/Serveur*/
+        let connection = new signalR.HubConnectionBuilder()
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Trace)
+            .withUrl("/chathub",
+                {
+                    /*Sélection du protocole de transfert (ici WebSockets)*/
+                    transport: signalR.HttpTransportType.WebSockets,
+                    /*Gestion du TOKEN*/
+                    accessTokenFactory: () => localStorage.getItem("token")
+                }
+            )
+            .build();
+
+        /*Déclaration des méthodes coté-client*/
+        connection.on("ReceiveMessage", data => {
+            document.getElementById("messageBox").value += "\r\n" + data;
+        });
+
+        connection.on("AccuseReception", data => {
+            if (data) { alert("Envoyé"); }
+            else
+                alert("Erreur");
+        });
+
+        /*Démarrage de la communication*/
+        connection.start()
+            .then(() => console.log("SignalR Up"));
+    </script>
+
+
+    <script>
+         document.querySelector('.btnjoin').addEventListener("click", function (event)
+         {
+             if (connection.connectionState == "Connected")
+             {
+                 connection.invoke("MemberJoinGroup", event.currentTarget.dataset.groupname);
+             }
+         });
+    </script>
+
+    <script>
+    document.getElementById("sendButton").addEventListener("click", function (e)
+    {
+        // recupérer le texte
+        let info = document.getElementById("inputUser").value;
+        document.getElementById("messageBox").value = "\r\n je dis : " + info;
+        connection.invoke("SendMessage", info, "Tous", "Aucun").then(() => info = "" );
+    });
+    </script>
+}
+
+
+<ul>
+    @foreach (TechnoChat.Models.GroupModel item in Model)
+    {
+        <li>@item.Name <button data-groupName="@item.Name" class="btn btn-info btnjoin">Join</button> </li>
+    }
+</ul>
+
+<hr />
+<textarea id="messageBox"></textarea>
+
+<br />
+<input type="text" placeholder="votre message" id="inputUser" />
+<button id="sendButton">Send</button>

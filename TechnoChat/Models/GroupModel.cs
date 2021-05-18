@@ -10,6 +10,7 @@ namespace TechnoChat.Models
 		public string Name { get; set; }
 		public List<UserModel> Users { get; set; }
 
+		//Constructor
 		public GroupModel()
 		{
 			Users = new List<UserModel>();

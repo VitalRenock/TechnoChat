@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TechnoChat.Infrastructure.Interfaces
+namespace TechnoChat.Hubs.Interfaces
 {
     /// <summary>
     /// Interface conditionnant le côté client de SignalR

@@ -1,0 +1,4 @@
+﻿----- Views.Index.cshtml
+1) On crée un formulaire HTML de connexion au Chat
+2) On crée une fonction qui envoie une requête au 'TokenController' afin de récupérer un 'token' de connexion au Chat
+3) On récupére le formulaire via Js et on ajoute un event lancant la fonction à la soumission du formulaire.

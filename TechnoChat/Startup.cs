@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using TechnoChat.Hubs;
 using TechnoChat.Infrastructure;
 using TII = TechnoChat.Infrastructure.Interfaces;
-//localhost: 44348
 
 namespace TechnoChat
 {

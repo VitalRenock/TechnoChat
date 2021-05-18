@@ -1,4 +1,35 @@
-﻿@*Je crée une section 'Scripts' à placer dans mes autres vues*@
+﻿@* On crée une liste de boutons pour rejoindre un groupe particulier *@
+<ul>
+    @foreach (TechnoChat.Models.GroupModel item in Model)
+    {
+        <li>@item.Name <button data-groupName="@item.Name" class="btn btn-info btnjoin">Join</button> </li>
+        <br />
+    }
+</ul>
+
+@* Test d'une liste des users dans le groupe *@
+<ul id="usersGroupList">
+    @foreach (var item in ViewData["adminList"] as IEnumerable<UserModel>)
+    {
+        <li>@item.Name</li>
+    }
+</ul>
+
+<hr />
+
+@* On crée une zone de texte pour afficher les messages *@
+<textarea id="messageBox"></textarea>
+
+<br />
+
+@* On crée un champ de texte pour écrire un nouveau message *@
+<input type="text" placeholder="votre message" id="inputUser" />
+
+@* On crée un bouton pour envoyer le message *@
+<button id="sendButton">Send</button>
+
+
+@*Je crée une section 'Scripts' à placer dans mes autres vues*@
 @section Scripts
 {
     @*Je référence la bibliothèque SignalR*@
@@ -34,42 +65,38 @@
         /*Démarrage de la communication*/
         connection.start()
             .then(() => console.log("SignalR Up"));
-    </script>
 
-
-    <script>
-        document.getElementById("joinButton").addEventListener("click", function (event)
-         {
-             if (connection.connectionState == "Connected")
-             {
-                 connection.invoke("MemberJoinGroup", event.currentTarget.dataset.groupname);
-             }
-         });
     </script>
 
     <script>
-    document.getElementById("sendButton").addEventListener("click", function (e)
-    {
-        // recupérer le texte
-        let info = document.getElementById("inputUser").value;
-        document.getElementById("messageBox").value = "\r\n je dis : " + info;
-        connection.invoke("SendMessage", info, "Tous", "Aucun").then(() => info = "" );
-    });
+
+        // On ajoute une nouvelle méthode anonyme à l'event click du bouton 'joinButton'
+        document.querySelector('.btnjoin').addEventListener("click", function (event) {
+
+            // On vérifie l'état de la connexion
+            if (connection.connectionState == "Connected") {
+                // On invoque la méthode 'AddUserToGroup' (coté-serveur) en fournissant le nom du groupe.
+                connection.invoke("AddUserToGroup", event.currentTarget.dataset.groupname);
+            }
+        });
+
     </script>
+
+    <script>
+
+        // On ajoute une nouvelle méthode anonyme à l'event click du bouton 'sendButton'
+        document.getElementById("sendButton").addEventListener("click", function (event) {
+
+            // On récupére le message dans le champ de texte
+            let info = document.getElementById("inputUser").value;
+
+            // On insère ce message dans le 'textArea'
+            document.getElementById("messageBox").value = "\r\n je dis : " + info;
+
+            // On envoie le message à tout les autres clients via la méthode 'SendMessage' (coté-serveur).
+            connection.invoke("SendMessage", info, "Tous", "Aucun").then(() => info = "");
+        });
+
+    </script>
+
 }
-
-
-<ul>
-    @foreach (TechnoChat.Models.GroupModel item in Model)
-    {
-        @*<li>@item.Name <button data-groupName="@item.Name" class="btn btn-info btnjoin">Join</button> </li>*@
-        <li>@item.Name <button data-groupName="@item.Name" id="joinButton">Join</button> </li>
-    }
-</ul>
-
-<hr />
-<textarea id="messageBox"></textarea>
-
-<br />
-<input type="text" placeholder="votre message" id="inputUser" />
-<button id="sendButton">Send</button>

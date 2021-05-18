@@ -38,8 +38,12 @@ namespace TechnoChat.Controllers
 
         public IActionResult Chat()
         {
-            _groupManager.AddUserToGroup("", "", "Admin");
+            _groupManager.AddUserToGroup("RenockAdmin", "", "Admin");
+            _groupManager.AddUserToGroup("SecondAdmin", "", "Admin");
             _groupManager.AddUserToGroup("", "", "Guest");
+
+            // Test affichage des users d'un groupe
+            ViewData["adminList"] = _groupManager.ListUserOfGroup("Admin");
 
             return View(_groupManager.ListOfGroup());
         }

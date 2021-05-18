@@ -2,7 +2,7 @@
     ViewData["Title"] = "Login Page";
 }
 
-@*Formulaire de connexion au Chat*@
+@* On crée un formulaire de connexion au Chat*@
 <form method="post" id="loginForm">
         <input type="text" class="form-control" placeholder="Login" name="Login">
         <input type="password" class="form-control" placeholder="Password" name="Password">
@@ -13,35 +13,55 @@
 @section Scripts
 {
     <script>
+
+        // On récupère le formulaire de connexion dans le document
         let frm = document.getElementById("loginForm");
+        // On ajoute un event à la soumission du formulaire qui lance la méthode de Login ('callLoginProgress')
         frm.addEventListener("submit", callLoginProcess, false);
 
         function callLoginProcess(event) {
-            //Empêcher le post du formulaire
+
+            // On empêche le post immédiat du formulaire
             event.preventDefault();
+
+            // On copie l'adresse du Controller API qui génere un Token
             let link = "https://localhost:44305/api/token/";
+
+            // On récupère les valeurs 'login' et 'password' du formulaire
             let login = frm[0].value;
             let pwd = frm[1].value;
+
+            // On crée un nouvel objet Js contenant les données du formulaire
             let data = {
                 "Login": login,
                 "Password": pwd
             };
+
+            // On crée une nouvelle requête avec la méthode Fetch
             fetch(link,
                 {
+                    // On déclare le type d'action de la requête
                     method: "POST",
+                    // On déclare le 'header' de la requête
                     headers: { "Content-Type": "application/json; charset=utf-8" },
+                    // On transforme l'objet Js 'data' en string JSON et on l'enregistre dans le 'body' de la requête.
                     body: JSON.stringify(data)
                 }
             )
+                // '.then' permet d'indiquer ce que l'on souhaite faire quand une réponse est recue
+                // On indique qu'on souhaite récupérer une réponse au format JSON
                 .then(res => res.json())
+                // On indique ce que l'on souhaite faire avec la réponse...
                 .then(response => {
-                    // here you do what you want with response
+                    // On enregistre dans le 'localStorage' du navigateur le 'token' contenu dans la réponse
                     localStorage.setItem('token', response.token)
+                    // On redirige l'utilisateur loggé vers la page du chat
                     document.location.href = "/Home/Chat"
                 })
+                // '.catch' permet d'indiquer ce que l'on souhaite faire quand une réponse recue n'est pas du format souhaité
                 .catch(err => {
-
-                    alert("sorry, authentication failed")
+                    // On affiche une pop-up si la connexion a échoué
+                    alert("Désolé, authentification échoué")
                 });
         }
     </script>

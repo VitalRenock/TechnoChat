@@ -7,12 +7,6 @@ namespace TechnoChat.Hubs.Interfaces
 {
 	public interface IChatServeur
 	{
-		//Task SendMessage(string user, string message);
-		//Task ChangeStatut();
-		//Task MemberJoinGroup(string groupName);
-		//Task MemberLeaveGroup(string groupName);
-		//Task Wizz(string user);
-
         /// <summary>
         /// Permet d'envoyer un message à tous les users ou à un user particulier ou à un groupe
         /// </summary>

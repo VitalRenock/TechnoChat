@@ -25,7 +25,7 @@ namespace TechnoChat.Infrastructure
 			try
 			{
 				UserModel userModel = new UserModel() { ConnectionID = connectionId, Name = user };
-				if (groups.Count(c => c.Name == groupName) > 1)
+				if (groups.Count(c => c.Name == groupName) < 1)
 				{
 					groups.Add(new GroupModel() { Name = groupName });
 				}

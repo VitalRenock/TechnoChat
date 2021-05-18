@@ -8,25 +8,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
-    <script src="~/lib/microsoft-signalr/signalr.js" type="text/javascript"></script>
-    @*<script>
-        let connection = new signalR.HubConnectionBuilder()
-            .withAutomaticReconnect()
-            .configureLogging(signalR.LogLevel.Trace)
-            .withUrl("/chathub")
-            .build();
-
-        connection.on("ReceiveMessage", data => {
-            let h1Node = document.body.appendChild(document.createElement("h1"));
-            h1Node.innerText = data;
-        });
-
-        connection.start()
-            .then(() =>
-                connection.invoke("SendMessage", "VitalRenock", "Hello world")
-        );
-    </script>*@
-
 </head>
 <body>
     <header>

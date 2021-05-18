@@ -68,3 +68,38 @@
         connection.start()
             .then(() => connection.invoke("SendMessage", "VitalRenock", "Hello world"));
     </script>
+
+
+
+
+
+
+    ARCHIVES CODE
+
+@*Ajout d'un bouton pour Joindre le groupe.*@
+<button id="joinGroup">Join Group</button>
+@*Ajout d'un bouton pour Quitter le groupe.*@
+<button id="leaveGroup">Leave Group</button>
+
+<ul>
+    @foreach (TechnoChat.Models.GroupModel item in Model)
+    {
+        <li>
+            @item.Name 
+            <button></button>
+        </li>
+    }
+</ul>
+
+@*Ajout des events aux boutons*@
+<script>
+    document.getElementById("joinGroup").addEventListener("click", function (event) {
+        if (connection.connectionState) {
+
+        }
+        connection.invoke("MemberJoinGroup", "AdminGroup");
+    });
+    document.getElementById("leaveGroup").addEventListener("click", function () {
+        connection.invoke("MemberLeaveGroup", "AdminGroup");
+    });
+</script>

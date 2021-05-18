@@ -38,7 +38,7 @@
 
 
     <script>
-         document.querySelector('.btnjoin').addEventListener("click", function (event)
+        document.getElementById("joinButton").addEventListener("click", function (event)
          {
              if (connection.connectionState == "Connected")
              {
@@ -62,7 +62,8 @@
 <ul>
     @foreach (TechnoChat.Models.GroupModel item in Model)
     {
-        <li>@item.Name <button data-groupName="@item.Name" class="btn btn-info btnjoin">Join</button> </li>
+        @*<li>@item.Name <button data-groupName="@item.Name" class="btn btn-info btnjoin">Join</button> </li>*@
+        <li>@item.Name <button data-groupName="@item.Name" id="joinButton">Join</button> </li>
     }
 </ul>
 
